@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UM College of Pharmacy — Digital Composite Kiosk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- EmailJS: lets this static kiosk send real emails without a backend server.
+     See EMAIL-SETUP.md for the 5-minute account setup and where to plug in your keys. -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="kiosk" id="kiosk">
+
+  <!-- SCREEN 1: LANDING -->
+  <section class="screen screen--landing is-active" data-screen="landing" id="screen-landing">
+    <div class="landing-art">
+      <div class="carousel" id="landing-carousel">
+        <div class="carousel__slides" id="carousel-slides"></div>
+        <div class="carousel__caption" id="carousel-caption"></div>
+        <div class="carousel__dots" id="carousel-dots"></div>
+      </div>
+    </div>
+    <h1 class="headline">Touch the Screen to Search for Your <span class="accent">Class Year</span></h1>
+    <button class="touch-target" id="btn-start" aria-label="Touch to begin"></button>
+  </section>
+
+  <!-- SCREEN 2: SEARCH -->
+  <section class="screen screen--search" data-screen="search" id="screen-search">
+    <h1 class="headline headline--sm" id="search-headline">Search for Your <span class="accent">Class Year</span></h1>
+    <p class="subtext" id="search-subtext">Enter your name and graduation year</p>
+
+    <div class="search-fields" id="search-fields">
+      <div class="field" id="field-name">
+        <label class="field__label" for="input-name">First Name &amp; Last Name*</label>
+        <div class="field__row">
+          <button class="field__exit" type="button" data-target="input-name" aria-label="Exit search, return to start" hidden>&#8592;</button>
+          <div class="field__input-wrap">
+            <input class="field__input" type="text" id="input-name" data-active="true" inputmode="none" placeholder="" autocomplete="off" />
+            <button class="field__clear" type="button" data-target="input-name" aria-label="Clear name field" hidden>&times;</button>
+          </div>
+        </div>
+      </div>
+      <div class="field" id="field-year">
+        <label class="field__label" for="input-year">Graduation Year*</label>
+        <div class="field__row">
+          <button class="field__exit" type="button" data-target="input-year" aria-label="Exit search, return to start" hidden>&#8592;</button>
+          <div class="field__input-wrap">
+            <input class="field__input" type="text" id="input-year" inputmode="none" placeholder="" autocomplete="off" />
+            <button class="field__clear" type="button" data-target="input-year" aria-label="Clear graduation year field" hidden>&times;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="suggestions" id="suggestions" hidden></div>
+
+    <div class="btn-row" id="search-btn-row">
+      <button class="btn btn--primary" id="btn-search">
+        <svg class="btn__icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#00274C" stroke-width="2.2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="#00274C" stroke-width="2.2" stroke-linecap="round"/></svg>
+        Search
+      </button>
+      <button class="btn btn--secondary" id="btn-reset">Reset</button>
+    </div>
+
+    <!-- On-screen keyboard (matches Figma's iPhone-style keyboard exactly) -->
+    <div class="keyboard" id="keyboard">
+      <div class="keyboard__rows" id="kb-alpha">
+        <div class="kbrow">
+          <button class="key" data-key="q">q</button><button class="key" data-key="w">w</button><button class="key" data-key="e">e</button><button class="key" data-key="r">r</button><button class="key" data-key="t">t</button><button class="key" data-key="y">y</button><button class="key" data-key="u">u</button><button class="key" data-key="i">i</button><button class="key" data-key="o">o</button><button class="key" data-key="p">p</button>
+        </div>
+        <div class="kbrow kbrow--offset">
+          <button class="key" data-key="a">a</button><button class="key" data-key="s">s</button><button class="key" data-key="d">d</button><button class="key" data-key="f">f</button><button class="key" data-key="g">g</button><button class="key" data-key="h">h</button><button class="key" data-key="j">j</button><button class="key" data-key="k">k</button><button class="key" data-key="l">l</button>
+        </div>
+        <div class="kbrow">
+          <button class="key key--special key--shift" data-action="shift" aria-label="Shift">&#8679;</button>
+          <button class="key" data-key="z">z</button><button class="key" data-key="x">x</button><button class="key" data-key="c">c</button><button class="key" data-key="v">v</button><button class="key" data-key="b">b</button><button class="key" data-key="n">n</button><button class="key" data-key="m">m</button>
+          <button class="key key--special" data-action="backspace" aria-label="Backspace">&#9003;</button>
+        </div>
+        <div class="kbrow kbrow--bottom">
+          <button class="key key--space" data-key=" ">space</button>
+          <button class="key key--next" data-action="tab" aria-label="Next field">&#8594;</button>
+        </div>
+      </div>
+      <div class="keyboard__rows" id="kb-numeric" hidden>
+        <div class="kbrow">
+          <button class="key" data-key="1">1</button><button class="key" data-key="2">2</button><button class="key" data-key="3">3</button>
+        </div>
+        <div class="kbrow">
+          <button class="key" data-key="4">4</button><button class="key" data-key="5">5</button><button class="key" data-key="6">6</button>
+        </div>
+        <div class="kbrow">
+          <button class="key" data-key="7">7</button><button class="key" data-key="8">8</button><button class="key" data-key="9">9</button>
+        </div>
+        <div class="kbrow">
+          <button class="key key--special" data-action="backspace" aria-label="Backspace">&#9003;</button>
+          <button class="key" data-key="0">0</button>
+          <button class="key key--next" data-action="tab" aria-label="Next field">&#8594;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 3: RESULTS -->
+  <section class="screen screen--results" data-screen="results" id="screen-results">
+    <h1 class="headline headline--sm">Search for Your <span class="accent">Class Year</span></h1>
+    <p class="subtext" id="results-summary">Results</p>
+
+    <div class="results-list results-list--grid" id="results-list"></div>
+
+    <div class="btn-row">
+      <button class="btn btn--primary" id="btn-results-search">
+        <svg class="btn__icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#00274C" stroke-width="2.2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="#00274C" stroke-width="2.2" stroke-linecap="round"/></svg>
+        New Search
+      </button>
+      <button class="btn btn--secondary" id="btn-results-reset">Reset</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: COMPOSITE VIEW -->
+  <section class="screen screen--composite" data-screen="composite" id="screen-composite">
+    <div class="composite-board" id="composite-board">
+      <div class="composite-board__header">
+        <span id="composite-board-title">2018 Class Composite</span>
+      </div>
+      <div class="composite-board__body">
+        <div class="composite-board__portrait" id="composite-portrait"></div>
+        <div class="composite-board__meta">
+          <p class="composite-board__year" id="composite-year">Class of 2018</p>
+        </div>
+      </div>
+    </div>
+    <h1 class="headline headline--sm headline--tight" id="composite-title">2018 Class Composite</h1>
+
+    <div class="btn-row">
+      <button class="btn btn--primary" id="btn-email">Email Composite</button>
+      <button class="btn btn--secondary" id="btn-search-again">Search Again</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 5: FORM -->
+  <section class="screen screen--form" data-screen="form" id="screen-form">
+    <div class="form-layout">
+      <div class="form-layout__intro">
+        <div class="composite-board composite-board--small">
+          <div class="composite-board__header"><span id="form-board-title">2018 Digital Composite</span></div>
+          <div class="composite-board__body composite-board__body--small">
+            <div class="composite-board__portrait composite-board__portrait--small" id="form-portrait"></div>
+          </div>
+        </div>
+        <h2 class="form-title" id="form-title">2018 Digital Composite</h2>
+        <p class="form-copy">We are thrilled to offer you a digital copy of your class composite. Simply fill out this form and we will email you a copy.</p>
+        <button class="btn btn--secondary" id="btn-form-search-again">Search Again</button>
+      </div>
+
+      <div class="form-layout__fields">
+        <div class="form-grid">
+          <div class="field field--form">
+            <label class="field__label field__label--form" for="f-first">First Name*</label>
+            <input class="field__input field__input--form" type="text" id="f-first" data-field="active" required />
+          </div>
+          <div class="field field--form">
+            <label class="field__label field__label--form" for="f-last">Last Name*</label>
+            <input class="field__input field__input--form" type="text" id="f-last" required />
+          </div>
+          <div class="field field--form">
+            <label class="field__label field__label--form" for="f-classyear">Class Year(s)*</label>
+            <input class="field__input field__input--form" type="text" id="f-classyear" required />
+          </div>
+          <div class="field field--form">
+            <label class="field__label field__label--form" for="f-degree">Degree(s)</label>
+            <input class="field__input field__input--form" type="text" id="f-degree" />
+          </div>
+          <div class="field field--form field--wide">
+            <label class="field__label field__label--form" for="f-email">Email Address*</label>
+            <input class="field__input field__input--form" type="email" id="f-email" required />
+          </div>
+          <div class="field field--form field--wide">
+            <label class="field__label field__label--form" for="f-phone">Phone Number</label>
+            <input class="field__input field__input--form" type="tel" id="f-phone" />
+          </div>
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="f-consent" />
+          <span class="checkbox-box" aria-hidden="true"></span>
+          <span class="checkbox-text">Yes, I would like to receive email communications from the University of Michigan College of Pharmacy.</span>
+        </label>
+
+        <p class="form-error" id="form-error" hidden>Please fill in all required fields (marked with *) and a valid email address.</p>
+
+        <button class="btn btn--primary btn--wide" id="btn-submit">Submit</button>
+      </div>
+    </div>
+
+    <!-- Reuses same iPhone-style keyboard as search, but targets form fields.
+         Keeps the ABC/123 tabs (unlike the search screen) since the form has
+         mixed field types — Figma doesn't define a keyboard for this screen. -->
+    <div class="keyboard keyboard--form" id="keyboard-form">
+      <div class="keyboard__tabs">
+        <button class="kbtab is-active" data-mode="alpha">ABC</button>
+        <button class="kbtab" data-mode="numeric">123</button>
+      </div>
+      <div class="keyboard__rows" id="kbf-alpha">
+        <div class="kbrow">
+          <button class="key" data-key="q">q</button><button class="key" data-key="w">w</button><button class="key" data-key="e">e</button><button class="key" data-key="r">r</button><button class="key" data-key="t">t</button><button class="key" data-key="y">y</button><button class="key" data-key="u">u</button><button class="key" data-key="i">i</button><button class="key" data-key="o">o</button><button class="key" data-key="p">p</button>
+        </div>
+        <div class="kbrow kbrow--offset">
+          <button class="key" data-key="a">a</button><button class="key" data-key="s">s</button><button class="key" data-key="d">d</button><button class="key" data-key="f">f</button><button class="key" data-key="g">g</button><button class="key" data-key="h">h</button><button class="key" data-key="j">j</button><button class="key" data-key="k">k</button><button class="key" data-key="l">l</button>
+        </div>
+        <div class="kbrow">
+          <button class="key key--special key--shift" data-action="shift" aria-label="Shift">&#8679;</button>
+          <button class="key" data-key="z">z</button><button class="key" data-key="x">x</button><button class="key" data-key="c">c</button><button class="key" data-key="v">v</button><button class="key" data-key="b">b</button><button class="key" data-key="n">n</button><button class="key" data-key="m">m</button>
+          <button class="key key--special" data-action="backspace" aria-label="Backspace">&#9003;</button>
+        </div>
+        <div class="kbrow kbrow--bottom">
+          <button class="key key--space" data-key=" ">space</button>
+          <button class="key key--next" data-action="tab" aria-label="Next field">&#8594;</button>
+        </div>
+      </div>
+      <div class="keyboard__rows" id="kbf-numeric" hidden>
+        <div class="kbrow">
+          <button class="key" data-key="1">1</button><button class="key" data-key="2">2</button><button class="key" data-key="3">3</button>
+        </div>
+        <div class="kbrow">
+          <button class="key" data-key="4">4</button><button class="key" data-key="5">5</button><button class="key" data-key="6">6</button>
+        </div>
+        <div class="kbrow">
+          <button class="key" data-key="7">7</button><button class="key" data-key="8">8</button><button class="key" data-key="9">9</button>
+        </div>
+        <div class="kbrow">
+          <button class="key" data-key="@">@</button><button class="key" data-key=".">.</button><button class="key" data-key="-">-</button>
+        </div>
+        <div class="kbrow">
+          <button class="key key--special" data-action="backspace" aria-label="Backspace">&#9003;</button>
+          <button class="key" data-key="0">0</button>
+          <button class="key key--next" data-action="tab" aria-label="Next field">&#8594;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 6: CONFIRMATION -->
+  <section class="screen screen--confirm" data-screen="confirm" id="screen-confirm">
+    <p class="confirm-text">
+      Thank you for requesting your class composite.<br />
+      <span class="accent">Please check your inbox.</span>
+    </p>
+    <button class="btn btn--secondary" id="btn-confirm-home">Return to Start Now</button>
+  </section>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
