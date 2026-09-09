@@ -1,7 +1,6 @@
 # Digital Composite Kiosk — Local Setup
 
-This is a self-contained, vanilla HTML/CSS/JS touchscreen kiosk app for the
-University of Michigan College of Pharmacy "Digital Composite" directory.
+This is a self-contained, vanilla HTML/CSS/JS touchscreen kiosk app.
 
 ## Contents
 - `index.html` — page structure for all 6 screens
