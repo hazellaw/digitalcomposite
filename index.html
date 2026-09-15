@@ -32,11 +32,11 @@
   <!-- SCREEN 2: SEARCH -->
   <section class="screen screen--search" data-screen="search" id="screen-search">
     <h1 class="headline headline--sm" id="search-headline">Search for Your <span class="accent">Class Year</span></h1>
-    <p class="subtext" id="search-subtext">Enter your name and graduation year</p>
+    <p class="subtext" id="search-subtext">Enter your name or graduation year</p>
 
     <div class="search-fields" id="search-fields">
       <div class="field" id="field-name">
-        <label class="field__label" for="input-name">First Name &amp; Last Name*</label>
+        <label class="field__label" for="input-name">First Name &amp; Last Name</label>
         <div class="field__row">
           <button class="field__exit" type="button" data-target="input-name" aria-label="Exit search, return to start" hidden>&#8592;</button>
           <div class="field__input-wrap">
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="field" id="field-year">
-        <label class="field__label" for="input-year">Graduation Year*</label>
+        <label class="field__label" for="input-year">Graduation Year</label>
         <div class="field__row">
           <button class="field__exit" type="button" data-target="input-year" aria-label="Exit search, return to start" hidden>&#8592;</button>
           <div class="field__input-wrap">
@@ -167,13 +167,14 @@
             <label class="field__label field__label--form" for="f-last">Last Name*</label>
             <input class="field__input field__input--form" type="text" id="f-last" required />
           </div>
-          <div class="field field--form">
-            <label class="field__label field__label--form" for="f-classyear">Class Year(s)*</label>
-            <input class="field__input field__input--form" type="text" id="f-classyear" required />
-          </div>
-          <div class="field field--form">
-            <label class="field__label field__label--form" for="f-degree">Degree(s)</label>
-            <input class="field__input field__input--form" type="text" id="f-degree" />
+          <div class="field field--form field--wide">
+            <label class="field__label field__label--form" for="f-relationship">Relationship to Alum*</label>
+            <select class="field__input field__input--form field__select" id="f-relationship" required>
+              <option value="" disabled selected>Select one</option>
+              <option value="Self">Self</option>
+              <option value="Family">Family</option>
+              <option value="Friends">Friends</option>
+            </select>
           </div>
           <div class="field field--form field--wide">
             <label class="field__label field__label--form" for="f-email">Email Address*</label>
@@ -233,7 +234,7 @@
           <button class="key" data-key="7">7</button><button class="key" data-key="8">8</button><button class="key" data-key="9">9</button>
         </div>
         <div class="kbrow">
-          <button class="key" data-key="@">@</button><button class="key" data-key=".">.</button><button class="key" data-key="-">-</button>
+          <button class="key" data-key="@">@</button><button class="key" data-key=".">.</button><button class="key" data-key="-">-</button><button class="key key--dotcom" data-key=".com">.com</button>
         </div>
         <div class="kbrow">
           <button class="key key--special" data-action="backspace" aria-label="Backspace">&#9003;</button>
@@ -250,7 +251,7 @@
       Thank you for requesting your class composite.<br />
       <span class="accent">Please check your inbox.</span>
     </p>
-    <button class="btn btn--secondary" id="btn-confirm-home">Return to Start Now</button>
+    <button class="btn btn--secondary" id="btn-confirm-home">Search Again</button>
   </section>
 
 </div>

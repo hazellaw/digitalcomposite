@@ -360,6 +360,7 @@ html, body {
   max-width: none;
   text-transform: lowercase;
 }
+.key--dotcom { font-size: clamp(.85rem, 1.3vw, 1.2rem); text-transform: lowercase; }
 /* Numeric keypad only has 3 columns per row, so its keys should stretch
    to fill the row width evenly instead of being capped at the alpha
    row's narrower per-key max-width. Its bottom row (backspace/0/next)
@@ -552,6 +553,17 @@ html, body {
 }
 .field--form .field__label--form { font-size: clamp(.85rem, 1.2vw, 1.1rem); }
 .field__input--form { height: 5.6vh; min-height: 44px; }
+.field__select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%2300274C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.4vw center;
+  background-size: 1.1em;
+  padding-right: 3.2vw;
+}
+.field__select option[value=""] { color: #888; }
 .field--wide { grid-column: 1 / -1; }
 
 .checkbox-row {
