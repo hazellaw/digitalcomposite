@@ -90,7 +90,7 @@
   var inputYear = document.getElementById("input-year");
   var activeField = null;
 
-  var formFieldsOrder = ["f-first", "f-last", "f-classyear", "f-degree", "f-email", "f-phone"]
+  var formFieldsOrder = ["f-first", "f-last", "f-email", "f-phone"]
     .map(function (id) { return document.getElementById(id); });
 
   var searchKeyboardEl = document.getElementById("keyboard");
@@ -337,8 +337,8 @@
   var searchBtn = document.getElementById("btn-search");
 
   function updateSearchButtonState() {
-    var hasBoth = inputName.value.trim().length > 0 && inputYear.value.trim().length > 0;
-    searchBtn.disabled = !hasBoth;
+    var hasEither = inputName.value.trim().length > 0 || inputYear.value.trim().length > 0;
+    searchBtn.disabled = !hasEither;
   }
   updateSearchButtonState();
   inputName.addEventListener("input", updateSearchButtonState);
@@ -560,13 +560,10 @@
 
       // Anyone can request any class's composite as long as they know the
       // name and year — the request isn't tied to who searched, so the
-      // form is left blank for the visitor to fill in themselves. Class
-      // Year is the one exception: it's pre-filled since it's determined
-      // by which photo they selected, not by anyone's identity.
+      // whole form is left blank for the visitor to fill in themselves.
       document.getElementById("f-first").value = "";
       document.getElementById("f-last").value = "";
-      document.getElementById("f-classyear").value = currentSelection.year;
-      document.getElementById("f-degree").value = "";
+      document.getElementById("f-relationship").value = "";
       document.getElementById("f-email").value = "";
       document.getElementById("f-phone").value = "";
 
@@ -603,13 +600,12 @@
   document.getElementById("btn-submit").addEventListener("click", function () {
     var first = document.getElementById("f-first").value.trim();
     var last = document.getElementById("f-last").value.trim();
-    var classYear = document.getElementById("f-classyear").value.trim();
-    var degree = document.getElementById("f-degree").value.trim();
+    var relationship = document.getElementById("f-relationship").value;
     var email = document.getElementById("f-email").value.trim();
     var phone = document.getElementById("f-phone").value.trim();
     var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    if (!first || !last || !classYear || !emailOk) {
+    if (!first || !last || !relationship || !emailOk) {
       formError.hidden = false;
       formError.textContent = "Please fill in all required fields (marked with *) and a valid email address.";
       return;
@@ -632,8 +628,8 @@
       to_email: email,
       first_name: first,
       last_name: last,
-      class_year: classYear,
-      degree: degree,
+      class_year: currentSelection ? currentSelection.year : "",
+      relationship: relationship,
       phone: phone
     };
 
@@ -658,13 +654,16 @@
    * --------------------------------------------------------- */
   document.getElementById("btn-confirm-home").addEventListener("click", function () {
     resetAll();
-    goTo("landing");
+    goTo("search");
+    setActiveField(inputName, { showKeyboard: false });
   });
 
   function resetAll() {
     inputName.value = "";
     inputYear.value = "";
     formFieldsOrder.forEach(function (f) { f.value = ""; });
+    var relationshipEl = document.getElementById("f-relationship");
+    if (relationshipEl) relationshipEl.value = "";
     document.getElementById("f-consent").checked = false;
     formError.hidden = true;
     currentSelection = null;

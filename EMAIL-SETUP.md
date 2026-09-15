@@ -26,7 +26,7 @@ using these variable names (they match what the kiosk sends):
 | `{{first_name}}` | First name they typed |
 | `{{last_name}}` | Last name they typed |
 | `{{class_year}}` | The class year of the composite they selected |
-| `{{degree}}` | Degree(s) they entered (may be blank) |
+| `{{relationship}}` | Their relationship to the alum: Self, Family, or Friends |
 | `{{phone}}` | Phone they entered (may be blank) |
 
 Example template body:
