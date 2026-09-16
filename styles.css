@@ -89,11 +89,11 @@ html, body {
 .subtext[hidden] { display: none; }
 
 /* ===== Landing screen ===== */
-.screen--landing { justify-content: center; }
+.screen--landing { justify-content: center; overflow-y: auto; }
 .landing-art { margin-bottom: 4vh; z-index: 2; }
 .carousel {
   position: relative;
-  width: min(46vw, 620px);
+  width: min(52vw, 1200px);
   aspect-ratio: 3/2;
   border-radius: 14px;
   overflow: hidden;
@@ -485,45 +485,23 @@ html, body {
   font-size: .95rem;
 }
 
-/* ===== Composite board ===== */
-.screen--composite { justify-content: flex-start; padding-top: 3vh; }
-.composite-board {
-  width: min(50vw, 640px);
-  background: var(--white);
-  border-radius: 14px;
-  box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+/* ===== Composite / Results screen — matches Figma exactly: a plain,
+   large photo with a thin frame, no card chrome, no header bar, no
+   caption text near the photo. ===== */
+.screen--composite { justify-content: flex-start; padding-top: 3vh; overflow-y: auto; }
+.composite-photo {
+  width: min(53vw, 1200px);
+  aspect-ratio: 3/2;
+  border-radius: 6px;
   overflow: hidden;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+  border: 3px solid rgba(255,255,255,0.85);
+  background-color: #e9e9e9;
+  background-size: cover;
+  background-position: center;
   z-index: 2;
   margin-bottom: 2.6vh;
 }
-.composite-board__header {
-  background: var(--blue-deep);
-  color: var(--maize);
-  font-family: var(--font-serif);
-  font-weight: 600;
-  text-align: center;
-  padding: 1.4vh 1vw;
-  font-size: clamp(1rem, 1.6vw, 1.5rem);
-}
-.composite-board__body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2vh;
-  padding: 1.6vh 1.6vw 2vh;
-}
-.composite-board__portrait {
-  width: 100%;
-  aspect-ratio: 3/2;
-  border-radius: 8px;
-  background: linear-gradient(160deg, #b9c2cc, #8f99a6);
-  background-size: cover;
-  background-position: center;
-  flex-shrink: 0;
-}
-.composite-board__portrait--photo { background-color: #fff; }
-.composite-board__meta { display: flex; flex-direction: column; gap: .3vh; align-items: center; text-align: center; }
-.composite-board__year { font-family: var(--font-sans); color: #4a4a4a; margin: 0; font-size: clamp(.8rem, 1.1vw, 1rem); }
 
 /* ===== Form ===== */
 .screen--form { justify-content: center; padding-top: 3vh; overflow-y: auto; transition: padding-bottom .1s ease; }
@@ -537,9 +515,7 @@ html, body {
   align-items: flex-start;
 }
 .form-layout__intro { flex: 0 0 34%; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.composite-board--small { width: 88%; margin-bottom: 2vh; }
-.composite-board__body--small { padding: 1.2vh 1vw 1.6vh; }
-.composite-board__portrait--small { width: 100%; }
+.composite-photo--small { width: 88%; margin-bottom: 2vh; }
 .form-title { font-family: var(--font-serif); font-weight: 600; color: var(--white); font-size: clamp(1.4rem, 2.6vw, 2.4rem); margin: 0 0 1.2vh; }
 .form-copy { font-family: var(--font-sans); color: var(--white); opacity: .92; line-height: 1.5; font-size: clamp(.9rem, 1.3vw, 1.2rem); }
 #btn-form-search-again { margin-top: 2.4vh; }
@@ -626,6 +602,6 @@ html, body {
   .form-layout__intro { flex: none; width: 100%; }
   .form-grid { grid-template-columns: 1fr; }
   .search-fields { width: 88vw; }
-  .composite-board { width: 82vw; }
+  .composite-photo { width: 82vw; }
   .key { max-width: 9vw; }
 }

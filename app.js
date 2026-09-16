@@ -337,8 +337,14 @@
   var searchBtn = document.getElementById("btn-search");
 
   function updateSearchButtonState() {
-    var hasEither = inputName.value.trim().length > 0 || inputYear.value.trim().length > 0;
-    searchBtn.disabled = !hasEither;
+    var nameQ = inputName.value.trim();
+    var yearQ = inputYear.value.trim();
+    var hasEither = nameQ.length > 0 || yearQ.length > 0;
+    // Also grey out if what's been typed doesn't match anyone in the
+    // directory at all — no point letting someone search for a name or
+    // year that can't possibly return a result.
+    var hasMatch = hasEither && filterDirectory(nameQ, yearQ).length > 0;
+    searchBtn.disabled = !hasMatch;
   }
   updateSearchButtonState();
   inputName.addEventListener("input", updateSearchButtonState);
@@ -368,10 +374,13 @@
     var nameQ = inputName.value.trim();
     var yearQ = inputYear.value.trim();
 
-    // Suggestions only start once at least 3 letters have been typed in
-    // the Name field — typing only a graduation year, or just 1-2
-    // letters, shouldn't trigger anything yet.
-    if (nameQ.length < MIN_NAME_CHARS_FOR_SUGGESTIONS) {
+    // Suggestions start once either 3+ letters are typed in Name, or
+    // anything is typed in Graduation Year — a lone digit or two in Year
+    // usually still matches real years, so this only reads as "no
+    // results" once what's typed genuinely doesn't match anyone.
+    var nameReady = nameQ.length >= MIN_NAME_CHARS_FOR_SUGGESTIONS;
+    var yearReady = yearQ.length > 0;
+    if (!nameReady && !yearReady) {
       suggestionsEl.hidden = true;
       suggestionsEl.innerHTML = "";
       return;
@@ -382,15 +391,25 @@
     // suggestion list genuinely useful for finding the right person.
     // The final results screen still resolves to a class year's photo
     // only, with no names shown, once a suggestion or Search is used.
-    var matches = filterDirectory(nameQ, yearQ);
+    var matches = filterDirectory(nameReady ? nameQ : "", yearQ);
     suggestionsEl.innerHTML = "";
 
     if (matches.length === 0) {
       suggestionsEl.hidden = false;
       var empty = document.createElement("p");
       empty.className = "suggestions__empty";
-      empty.textContent = "No matches yet";
+      var queryLabel = [nameReady ? nameQ : "", yearQ].filter(Boolean).join(" · ");
+      empty.textContent = "No Results Found for \"" + queryLabel + "\"";
       suggestionsEl.appendChild(empty);
+      return;
+    }
+
+    // A valid year on its own has real matches, but with no name typed
+    // there's nothing to narrow down — showing a pile of names here
+    // would just be noise (and would leak names the results screen
+    // otherwise never shows for a year-only search). Stay hidden instead.
+    if (!nameReady) {
+      suggestionsEl.hidden = true;
       return;
     }
 
@@ -518,16 +537,13 @@
   function selectYear(group) {
     currentSelection = { year: group.year, photo: group.photo };
 
-    document.getElementById("composite-board-title").textContent = group.year + " Class Composite";
     document.getElementById("composite-title").textContent = group.year + " Class Composite";
-    document.getElementById("composite-year").textContent = "Class of " + group.year;
 
     var portraitEl = document.getElementById("composite-portrait");
     var photoUrl = PHOTOS[group.photo];
 
     if (photoUrl) {
       portraitEl.style.backgroundImage = "url('" + photoUrl + "')";
-      portraitEl.classList.add("composite-board__portrait--photo");
     }
     suggestionsEl.hidden = true;
     goTo("composite");
@@ -555,7 +571,6 @@
 
   document.getElementById("btn-email").addEventListener("click", function () {
     if (currentSelection) {
-      document.getElementById("form-board-title").textContent = currentSelection.year + " Digital Composite";
       document.getElementById("form-title").textContent = currentSelection.year + " Digital Composite";
 
       // Anyone can request any class's composite as long as they know the
@@ -571,7 +586,6 @@
       var photoUrl = PHOTOS[currentSelection.photo];
       if (formPhotoEl && photoUrl) {
         formPhotoEl.style.backgroundImage = "url('" + photoUrl + "')";
-        formPhotoEl.classList.add("composite-board__portrait--photo");
       }
     }
     goTo("form");
