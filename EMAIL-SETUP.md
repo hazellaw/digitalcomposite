@@ -23,15 +23,15 @@ using these variable names (they match what the kiosk sends):
 | Variable | What it is |
 |---|---|
 | `{{to_email}}` | The requester's email — set this as the template's **To** address |
-| `{{first_name}}` | First name they typed |
-| `{{last_name}}` | Last name they typed |
+| `{{name}}` | Name they typed |
 | `{{class_year}}` | The class year of the composite they selected |
-| `{{relationship}}` | Their relationship to the alum: Self, Family, or Friends |
+| `{{affiliation}}` | Their affiliation: Alumni, Family, Friend, Faculty, or Student |
 | `{{phone}}` | Phone they entered (may be blank) |
+| `{{address}}` | Address they entered (may be blank) |
 
 Example template body:
 ```
-Hi {{first_name}},
+Hi {{name}},
 
 Thanks for requesting your {{class_year}} Digital Composite from the
 University of Michigan College of Pharmacy. Your copy is attached

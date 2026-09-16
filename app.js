@@ -90,7 +90,7 @@
   var inputYear = document.getElementById("input-year");
   var activeField = null;
 
-  var formFieldsOrder = ["f-first", "f-last", "f-email", "f-phone"]
+  var formFieldsOrder = ["f-name", "f-email", "f-phone", "f-address"]
     .map(function (id) { return document.getElementById(id); });
 
   var searchKeyboardEl = document.getElementById("keyboard");
@@ -561,11 +561,11 @@
       // Anyone can request any class's composite as long as they know the
       // name and year — the request isn't tied to who searched, so the
       // whole form is left blank for the visitor to fill in themselves.
-      document.getElementById("f-first").value = "";
-      document.getElementById("f-last").value = "";
-      document.getElementById("f-relationship").value = "";
+      document.getElementById("f-name").value = "";
+      document.getElementById("f-affiliation").value = "";
       document.getElementById("f-email").value = "";
       document.getElementById("f-phone").value = "";
+      document.getElementById("f-address").value = "";
 
       var formPhotoEl = document.getElementById("form-portrait");
       var photoUrl = PHOTOS[currentSelection.photo];
@@ -598,14 +598,14 @@
   var submitBtnDefaultText = submitBtn.textContent;
 
   document.getElementById("btn-submit").addEventListener("click", function () {
-    var first = document.getElementById("f-first").value.trim();
-    var last = document.getElementById("f-last").value.trim();
-    var relationship = document.getElementById("f-relationship").value;
+    var name = document.getElementById("f-name").value.trim();
+    var affiliation = document.getElementById("f-affiliation").value;
     var email = document.getElementById("f-email").value.trim();
     var phone = document.getElementById("f-phone").value.trim();
+    var address = document.getElementById("f-address").value.trim();
     var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    if (!first || !last || !relationship || !emailOk) {
+    if (!name || !affiliation || !emailOk) {
       formError.hidden = false;
       formError.textContent = "Please fill in all required fields (marked with *) and a valid email address.";
       return;
@@ -626,11 +626,11 @@
 
     var templateParams = {
       to_email: email,
-      first_name: first,
-      last_name: last,
+      name: name,
       class_year: currentSelection ? currentSelection.year : "",
-      relationship: relationship,
-      phone: phone
+      affiliation: affiliation,
+      phone: phone,
+      address: address
     };
 
     window.emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, templateParams)
@@ -662,8 +662,8 @@
     inputName.value = "";
     inputYear.value = "";
     formFieldsOrder.forEach(function (f) { f.value = ""; });
-    var relationshipEl = document.getElementById("f-relationship");
-    if (relationshipEl) relationshipEl.value = "";
+    var affiliationEl = document.getElementById("f-affiliation");
+    if (affiliationEl) affiliationEl.value = "";
     document.getElementById("f-consent").checked = false;
     formError.hidden = true;
     currentSelection = null;

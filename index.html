@@ -160,20 +160,18 @@
       <div class="form-layout__fields">
         <div class="form-grid">
           <div class="field field--form">
-            <label class="field__label field__label--form" for="f-first">First Name*</label>
-            <input class="field__input field__input--form" type="text" id="f-first" data-field="active" required />
+            <label class="field__label field__label--form" for="f-name">Name*</label>
+            <input class="field__input field__input--form" type="text" id="f-name" data-field="active" required />
           </div>
           <div class="field field--form">
-            <label class="field__label field__label--form" for="f-last">Last Name*</label>
-            <input class="field__input field__input--form" type="text" id="f-last" required />
-          </div>
-          <div class="field field--form field--wide">
-            <label class="field__label field__label--form" for="f-relationship">Relationship to Alum*</label>
-            <select class="field__input field__input--form field__select" id="f-relationship" required>
+            <label class="field__label field__label--form" for="f-affiliation">Affiliations*</label>
+            <select class="field__input field__input--form field__select" id="f-affiliation" required>
               <option value="" disabled selected>Select one</option>
-              <option value="Self">Self</option>
+              <option value="Alumni">Alumni</option>
               <option value="Family">Family</option>
-              <option value="Friends">Friends</option>
+              <option value="Friend">Friend</option>
+              <option value="Faculty">Faculty</option>
+              <option value="Student">Student</option>
             </select>
           </div>
           <div class="field field--form field--wide">
@@ -183,6 +181,10 @@
           <div class="field field--form field--wide">
             <label class="field__label field__label--form" for="f-phone">Phone Number</label>
             <input class="field__input field__input--form" type="tel" id="f-phone" />
+          </div>
+          <div class="field field--form field--wide">
+            <label class="field__label field__label--form" for="f-address">Address</label>
+            <input class="field__input field__input--form" type="text" id="f-address" />
           </div>
         </div>
 
